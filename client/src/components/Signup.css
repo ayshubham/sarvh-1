@@ -74,7 +74,7 @@ button {
   justify-self: center;
   height: fit-content;
   width: fit-content;
-  padding-top: 5rem;
+  padding-top: 1.5rem;
 }
 
 .inputbox input {
@@ -118,7 +118,7 @@ button {
   justify-self: center;
 
   grid-row-gap: 1rem;
-  padding-top: 5rem;
+  padding-top: 4rem;
 }
 .mainbtn button {
   height: 2.8rem;

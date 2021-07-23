@@ -1,11 +1,56 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styles from "../components/Login.css"
 import Loginimg from "../Images/Loginimg.jpg"
-import Signup from './Signup'
+
 import {Link} from 'react-router-dom'
 
 function Login(props) {
+
+    const [user, setUser] = useState({
+        email:"", password:""
+    })
+
+    let name, value;
+
+    const handleInputs = (e) =>{
+        console.log(e)
+        name = e.target.name
+        value = e.target.value
+
+        setUser({...user, [name]:value})
+        
+    }
+
+    const PostData = async (e) =>{
+        e.preventDefault();
+        const { email, password} = user;
+        
+        const res = await fetch ("http://localhost:5000/api/login",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                email, password
+
+            })
+        })
+
+        const data = await res.json();
+        if(data.status === 400 || !data){
+            window.alert("invalid signup")
+            console.log("invalid")
+        }else{
+            window.alert("sucsess")
+            props.history.push('/home')
+        }
+
+    }
+
+
+  
     return (
+
         <div>
             <div className="main"  id="left-sidebar">
                 <div className="imgbg">
@@ -23,15 +68,21 @@ function Login(props) {
                     </div>
                     <div className="textone">LOGIN TO CONTINUE</div>
                     <div className="inputbox">
-                        <input type="text" placeholder="USERNAME OR EMAIL ADDRESS" className="input_username"/>
-                        <input type="password" placeholder="PASSWORD" className="input_username"/>
+                        <input type="text" placeholder="USERNAME OR EMAIL ADDRESS" 
+                         name="email"
+                         value={user.email}
+                         onChange={handleInputs}
+                         className="input_username"/>
+                        <input type="password" placeholder="PASSWORD" 
+                         name="password"
+                         value={user.password}
+                         onChange={handleInputs}
+                         className="input_username"/>
                         <div className="forget"> <a href="" className="first">Forgot Password?</a> </div>
                     </div>
 
                     <div className="mainbtn">
-                        <button className="logintwo" onClick={()=>{
-                            props.history.push('/signup')
-                        }}>LOGIN</button>
+                        <button className="logintwo" onClick={PostData}>LOGIN</button>
                        
                         <button className="facebook">FACEBOOK</button>
                         <button className="google">GOOGLE</button>
