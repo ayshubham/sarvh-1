@@ -4,50 +4,74 @@ import Signupimg from "../images/Signupimg.jpg";
 import Login from "./Login";
 import { useHistory } from "react-router-dom";
 
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import { makeStyles, FormControlLabel, FormLabel } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import Swal from "sweetalert2";
+
+const useStyles = makeStyles({
+  field: {
+    marginTop: 20,
+    marginBottom: 20,
+    display: "block",
+  },
+});
+// function to validate email
+function validateEmail(email) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+// function to validate password
+function validatePassword(str) {
+  var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  return re.test(str);
+}
 function Signup(props) {
   const history = useHistory();
+  const classes = useStyles();
 
-  const [user, setUser] = useState({
-    fullname: "",
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  var [emailError, setEmailError] = useState(false);
 
-  let name, value;
-
-  const handleInputs = e => {
-    console.log(e);
-    name = e.target.name;
-    value = e.target.value;
-
-    setUser({ ...user, [name]: value });
-  };
-
-  const PostData = async e => {
+  const signUpForm = e => {
     e.preventDefault();
 
-    const { fullname, username, email, password } = user;
-
-    const res = await fetch("http://localhost:5000/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        fullname,
-        username,
-        email,
-        password,
-      }),
-    });
-
-    const data = await res.json();
-    if (data.status === 404 || !data) {
-      window.alert("invalid registraton");
+    if (!validateEmail(email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email...",
+        text: "Please try again :(",
+      });
     } else {
-      window.alert("sucsess");
-      history.push("/login");
+      // checking if password is same or not
+      if (password !== confirmPassword) {
+        Swal.fire({
+          icon: "error",
+          title: "Password doesn't match..",
+          text: "Please try again :(",
+        });
+      } else {
+        // if password is same
+        if (!validatePassword(password)) {
+          // validating password
+          Swal.fire({
+            icon: "error",
+            title: "Invalid Password..",
+            text: "Password should be 8 characters long, should have one numerical, capital and a special character",
+          });
+        } else {
+          console.log(fullname, username, email, password, confirmPassword);
+        }
+      }
     }
   };
 
@@ -69,48 +93,72 @@ function Signup(props) {
             </button>
             <button className="login">SIGN UP</button>
           </div>
-          <div className="textone">SIGN UP TO CONTINUE</div>
-          <form methos="POST" className="inputbox">
-            <input
-              type="text"
-              placeholder="NAME"
-              name="fullname"
-              value={user.fullname}
-              onChange={handleInputs}
-              className="input_username"
-            />
-            <input
-              type="text"
-              placeholder="USERNAME"
-              name="username"
-              value={user.username}
-              onChange={handleInputs}
-              className="input_username"
-            />
-
-            <input
-              type="email"
-              placeholder="EMAIL ADDRESS"
-              name="email"
-              value={user.email}
-              onChange={handleInputs}
-              className="input_username"
-            />
-            <input
-              type="password"
-              placeholder="PASSWORD"
-              name="password"
-              value={user.password}
-              onChange={handleInputs}
-              className="input_username"
-            />
-          </form>
-
-          <div className="mainbtn">
-            <button className="logintwo" onClick={PostData}>
-              SIGN UP
-            </button>
-          </div>
+          <Container size="sm">
+            <Typography
+              variant="h6"
+              color="textPrimary"
+              component="h2"
+              gutterBottom
+            >
+              Signup to Continue
+            </Typography>
+            <form noValidate autoComplete="off" onSubmit={signUpForm}>
+              <TextField
+                className={classes.field}
+                label="Full Name"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                required
+                onChange={e => setFullname(e.target.value)}
+              />
+              <TextField
+                className={classes.field}
+                label="Username"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                required
+                onChange={e => setUsername(e.target.value)}
+              />
+              <TextField
+                className={classes.field}
+                label="Email"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                required
+                onChange={e => setEmail(e.target.value)}
+                error={emailError}
+              />
+              <TextField
+                className={classes.field}
+                label="Password"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                required
+                onChange={e => setPassword(e.target.value)}
+              />
+              <TextField
+                className={classes.field}
+                label="Confirm Password"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                required
+                onChange={e => setConfirmPassword(e.target.value)}
+              />
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                endIcon={<KeyboardArrowRightIcon />}
+              >
+                Sign Up
+              </Button>
+            </form>
+          </Container>
         </div>
       </div>
     </div>

@@ -69,16 +69,16 @@ button {
   padding-top: 4rem;
 }
 
-.inputbox {
+/* .inputbox {
   display: flex;
   flex-direction: column;
   justify-self: center;
   height: fit-content;
   width: fit-content;
   padding-top: 5rem;
-}
+} */
 
-.inputbox input {
+/* .inputbox input {
   font-family: "Montserrat", sans-serif;
   margin: 0.9rem 1rem 1rem 0.9rem;
   width: 30rem;
@@ -93,18 +93,9 @@ button {
   color: grey;
   padding-left: 1rem;
   font-weight: 400;
-}
+} */
 
-::placeholder {
-  font-family: "Montserrat", sans-serif;
-  color: black;
-  font-size: 1rem;
-  justify-content: center;
-  align-items: center;
-  font-weight: 400;
 
-  /* bottom: 50px; */
-}
 
 .forget {
   width: fit-content;
