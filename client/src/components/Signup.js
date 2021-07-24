@@ -3,6 +3,9 @@ import styles from './Signup.css';
 import Signupimg from "../Images/Signupimg.jpg"
 import Login from "./Login"
 
+import isEmail from 'validator/lib/isEmail';
+import isEmpty from 'validator/lib/isEmpty';
+import equals from 'validator/lib/equals';
 
 
 function Signup(props) {
@@ -10,7 +13,7 @@ function Signup(props) {
     
 
     const [user, setUser] = useState({
-        fullname:"", username: "", email:"", password:""
+        fullname:"", username: "", email:"", password:"", cpassword:""
     })
 
     let name, value;
@@ -27,7 +30,12 @@ function Signup(props) {
     const PostData = async (e) =>{
         e.preventDefault();
 
-        const { fullname, username, email, password, } = user;
+
+        if (isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(cpassword)){setUser({
+            ...user, errorMsg:"all fields are required"
+        })}
+
+        const { fullname, username, email, password, cpassword } = user;
         
         const res = await fetch ("http://localhost:5000/api/register",{
             method:"POST",
